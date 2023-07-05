@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to ESEM</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to ESEM</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(esem)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: GPArotation</span></span></code></pre></div>
+<div id="exploratory-structural-equiation-modeling-esem-with-esem-package" class="section level2">
+<h2>Exploratory Structural Equiation Modeling ESEM with
+<code>esem</code> package</h2>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>Install packages if required</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>,<span class="st">&quot;psych&quot;</span>,<span class="st">&quot;lavaan&quot;</span>,<span class="st">&quot;semPlot&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;maria-pro/esem&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Start</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(esem)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#the package with the dataset to be used</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;maria-pro/esem&quot;</span>, <span class="at">build_vignettes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(esem)</span></code></pre></div>
+<p>Load the data into the R: <code>sdq_lsac</code> is in-built dataset
+that is also available at …….</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sdq_lsac<span class="ot">&lt;-</span>sdq_lsac</span></code></pre></div>
+<p>To review the dimensions of the data (i.e. observations and
+variables), use <code>dim()</code> function</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sdq_lsac)</span></code></pre></div>
+<p><code>describe()</code> function provides the statistics about the
+dataset. Other functions are available to explore the variables and
+relationships between them which is not part of this tutorial.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(sdq_lsac)</span></code></pre></div>
+<p>The current tutorial skips the preprocessing and data exploration
+steps and goes straight to the steps to complete the ESEM.</p>
+<p>We follow the classical approach in treating SDQ data which is a
+5-factor model. The allocation of variables to factors are set up using
+the named list data structure using <code>list()</code> function where
+factors are specified using the left-hand side of <code>=</code> and the
+constituent sdq_lsac items are provided as a vector using
+<code>c()</code>. Five factors are specified below: <code>pp</code>,
+<code>cp</code>, <code>es</code>, <code>ha</code> and
+<code>ps</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>main_loadings_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pp =</span> <span class="fu">c</span>(<span class="st">&quot;s6_1&quot;</span>, <span class="st">&quot;s11_1R&quot;</span>, <span class="st">&quot;s14_1R&quot;</span>, <span class="st">&quot;s19_1&quot;</span>, <span class="st">&quot;s23_1&quot;</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cp =</span> <span class="fu">c</span>(<span class="st">&quot;s5_1&quot;</span>, <span class="st">&quot;s7_1R&quot;</span>, <span class="st">&quot;s12_1&quot;</span>, <span class="st">&quot;s18_1&quot;</span>, <span class="st">&quot;s22_1&quot;</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">es =</span> <span class="fu">c</span>(<span class="st">&quot;s3_1&quot;</span>, <span class="st">&quot;s8_1&quot;</span>, <span class="st">&quot;s13_1&quot;</span>, <span class="st">&quot;s16_1&quot;</span>, <span class="st">&quot;s24_1&quot;</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ha =</span> <span class="fu">c</span>(<span class="st">&quot;s2_1&quot;</span>,<span class="st">&quot;s10_1&quot;</span>,<span class="st">&quot;s15_1&quot;</span>,<span class="st">&quot;s21_1R&quot;</span>,<span class="st">&quot;s25_1R&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ps =</span> <span class="fu">c</span>(<span class="st">&quot;s1_1&quot;</span>,<span class="st">&quot;s4_1&quot;</span>,<span class="st">&quot;s9_1&quot;</span>,<span class="st">&quot;s17_1&quot;</span>,<span class="st">&quot;s20_1&quot;</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                          ) </span></code></pre></div>
+<div id="esem-based-on-efa-derived-loading-thresholds" class="section level4">
+<h4>ESEM based on EFA derived loading thresholds</h4>
+<p>The <code>esem_efa()</code> function estimates and reports EFA. The
+results are saved in <code>esem_efa_results</code> object.</p>
+<p>The following arguments are used:</p>
+<ul>
+<li><p>the dataset to be used <code>data=sdq_lsac</code>, alteratively,
+a correlation or covariance matrix can be provided</p></li>
+<li><p>the number of factors <code>nfactors=5</code> (based on the
+classic 5-factor SDQ approach in literature)</p></li>
+<li><p>the evaluation is done using the ML algorithm,
+<code>fm = &#39;ml&#39;</code>. The alternative algorithms are available,
+including minimum residual (minres, i.e. ols or uls), principal axes,
+alpha factoring, weighted least squares and minimum rank. The full list
+of algorithms is provided at <a href="https://www.rdocumentation.org/packages/psych/versions/2.2.3/topics/fa">here</a></p></li>
+<li><p>the rotation method <code>rotate = &quot;geominT&quot;</code>. The full
+list of available rotations is accessible at <a href="https://www.rdocumentation.org/packages/psych/versions/2.2.3/topics/fa">here</a></p></li>
+<li><p>factor scores are estimated using regression via
+<code>scores=&quot;regression&quot;</code>. Alternative approaches are available
+at [here] (<a href="https://www.rdocumentation.org/packages/psych/versions/2.2.3/topics/fa" class="uri">https://www.rdocumentation.org/packages/psych/versions/2.2.3/topics/fa</a>)</p></li>
+<li><p><code>residuals=TRUE</code> requests the residual matrix to be
+generated and presented</p></li>
+<li><p>the dataset used in this tutorial (sdq_lsac) has no missing
+values, but for demonstration purposes the argument missing=TRUE is used
+– it allows to impute missing values during the EFA stage.</p></li>
+<li><p>the default confidence intervals for RMSEA is used with
+<code>alpha=.1</code></p></li>
+<li><p>the default probability values are used for confidence intervals,
+however they can be adjusted by specifying p and the value. The default
+is <code>p=.05.</code></p></li>
+</ul>
+<p>For more options on running the esem_efa() function please see <a href="https://www.rdocumentation.org/packages/psych/versions/2.2.5/topics/fa">here</a>.
+Please ignore the <code>“Loading required namespace: GPArotation”</code>
+message received, as such functions are already addressed by the
+packages retrieved.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>esem_efa_results <span class="ot">&lt;-</span> <span class="fu">esem_efa</span>(<span class="at">data=</span>sdq_lsac, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nfactors =</span><span class="dv">5</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fm =</span> <span class="st">&#39;ML&#39;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">rotate=</span><span class="st">&quot;geominT&quot;</span>, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">scores=</span><span class="st">&quot;regression&quot;</span>, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">residuals=</span><span class="cn">TRUE</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">missing=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><em>ALTERNATIVELY</em></p>
+<p>The alternative solution is to run EFA with Target rotation. This
+option is explained in Step 1a below</p>
+</div>
+<div id="conduct-efa-to-calculate-efa-derived-cross-loadings-with-target-rotation" class="section level4">
+<h4>Conduct EFA to calculate EFA derived cross-loadings with Target
+rotation</h4>
+<p>For target rotation, there needs to be a target supplied to the
+EFA.</p>
+<p>To make a target, a list of main loadings
+(<code>main_loading_list</code>) is created using the
+<code>list()</code> function and supplied to <code>make_target()</code>
+function.</p>
+<p>The following arguments are used:</p>
+<ul>
+<li>the dataset to be used <code>data=sdq_lsac</code>,</li>
+<li><code>keys= main_loadings_list</code> is the list of main
+loadings</li>
+</ul>
+<p>The <code>esem_efa()</code> function is used with
+<code>rotate= “TargetQ&quot;</code> and target matrix provided as
+<code>Target</code>. All other arguments remain the same</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>main_loadings_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pp =</span> <span class="fu">c</span>(<span class="st">&quot;s6_1&quot;</span>, <span class="st">&quot;s11_1R&quot;</span>, <span class="st">&quot;s14_1R&quot;</span>, <span class="st">&quot;s19_1&quot;</span>, <span class="st">&quot;s23_1&quot;</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cp =</span> <span class="fu">c</span>(<span class="st">&quot;s5_1&quot;</span>, <span class="st">&quot;s7_1R&quot;</span>, <span class="st">&quot;s12_1&quot;</span>, <span class="st">&quot;s18_1&quot;</span>, <span class="st">&quot;s22_1&quot;</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">es =</span> <span class="fu">c</span>(<span class="st">&quot;s3_1&quot;</span>, <span class="st">&quot;s8_1&quot;</span>, <span class="st">&quot;s13_1&quot;</span>, <span class="st">&quot;s16_1&quot;</span>, <span class="st">&quot;s24_1&quot;</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ha =</span> <span class="fu">c</span>(<span class="st">&quot;s2_1&quot;</span>,<span class="st">&quot;s10_1&quot;</span>,<span class="st">&quot;s15_1&quot;</span>,<span class="st">&quot;s21_1R&quot;</span>,<span class="st">&quot;s25_1R&quot;</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ps =</span> <span class="fu">c</span>(<span class="st">&quot;s1_1&quot;</span>,<span class="st">&quot;s4_1&quot;</span>,<span class="st">&quot;s9_1&quot;</span>,<span class="st">&quot;s17_1&quot;</span>,<span class="st">&quot;s20_1&quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>target<span class="ot">&lt;-</span><span class="fu">make_target</span>(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>sdq_lsac, </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">keys=</span>main_loadings_list)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">esem_efa</span>(</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">data=</span>sdq_lsac,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">nfactors =</span> <span class="dv">5</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">rotate=</span><span class="st">&quot;TargetQ&quot;</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Target=</span> target)</span></code></pre></div>
+<p>Reviewing the generated loadings and creating a referent items per
+factor, list</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>esem_model <span class="ot">&lt;-</span> <span class="fu">esem_syntax</span>(esem_efa_results, referent_list)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(esem_model)</span></code></pre></div>
+<p>To address this step an ESEM model is required. This can be
+automatically produced using the <code>esem _syntax()</code> function
+available from the esem code developed for this tutorial. The function
+uses the step 1 EFA results and the step 2 referent item(s) per factor
+list.</p>
+<p>Providing the <code>referent_list</code> object is optional. If no
+referent list is provided, it is created by the function itself and is
+used in model syntax generation. This allows all primary and non-primary
+loadings to be considered at their EFA varying levels.</p>
+<p>Step 3 also automatically produces the <code>esem_model</code> syntax
+as one structural unit/object to be tested at step 4.</p>
+<p><code>writeLines(model_syntax)</code> allows to review the model
+syntax before it is used further. If required the model can be adjusted
+manually by the researcher.</p>
+<p>Review the generated syntax carefully. This may be required for model
+identification purposes. For example, in case the variance-covariance
+matrix of the estimated parameters (vcov) does not appear to be positive
+definite, further adjustments to the model are required.</p>
+<p>If adjustments are required the model can be rewritten manually</p>
+<p>Testing the ESEM model</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>esem_fit <span class="ot">&lt;-</span> <span class="fu">esem_cfa</span>(<span class="at">model=</span>esem_model, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data=</span>sdq_lsac, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">std.lv=</span><span class="cn">TRUE</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(esem_fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>The <code>esem_cfa()</code> function fits a CFA model, where:</p>
+<ul>
+<li><p>the model syntax is specified using the esem_syntax generated in
+step 3, model=esem_model</p></li>
+<li><p>the dataset is specified in<code>data=sdq_lsac</code></p></li>
+<li><p>a list of model matrices is requested where values are the
+standardized model parameters, while the variances of the latent
+variables are set to unity. This is done via
+<code>std.lv = TRUE</code></p></li>
+<li><p>instrument items are specified as ordinal variables with
+<code>ordered = TRUE</code></p></li>
+</ul>
+<p>To review the results the <code>summary()</code>function is used
+with:</p>
+<p>-<code>fit.measures = TRUE</code>. This calculates the goodness of
+fit parameters to assess model fit</p>
+<p>The argument <code>Standardized = TRUE</code> provides two columns
+reporting (i) standardized parameters when only the latent variable is
+standardized (<code>std.lv</code>), and (ii) standardized parameters
+when both observed and latent variables are standardized
+(<code>std.all</code>).</p>
+<p>For more options on running esem_cfa() function please see <a href="https://www.rdocumentation.org/packages/lavaan/versions/0.5-9/topics/cfa">here</a></p>
+<p>Visualizing ESEM Model</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(esem_fit,<span class="at">whatLabels =</span> <span class="st">&quot;std&quot;</span>,<span class="at">layout =</span> <span class="st">&quot;tree&quot;</span>)</span></code></pre></div>
+<p>The <code>semPaths ()</code> function plots the model and allows to
+customise its visualization with the following arguments:<br />
+- <code>esem_fit</code> as the fitted model, created in step 4 -
+<code>whatLabels=”std”</code> to produce standardized path coefficients
+- <code>layout=”tree”</code> to produce a tree-like disposition of
+elements in the plot</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
